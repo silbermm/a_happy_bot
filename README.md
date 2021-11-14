@@ -1,21 +1,41 @@
-# SupTwitch
+# AHappyBot
 
-**TODO: Add description**
+A bot for Twitch that will
+  * [x] display your current Spotify artist/song.
+  * [x] show help
 
-## Installation
+## Building and Running
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `sup_twitch` to your list of dependencies in `mix.exs`:
+### Prerequisites
 
-```elixir
-def deps do
-  [
-    {:sup_twitch, "~> 0.1.0"}
-  ]
-end
+  * Elixir 1.12 or higher
+  * Spotify Application - https://developer.spotify.com/dashboard/
+      * Client Id
+      * Client Secret
+      * Refresh Token
+  * Twitch Account
+      * Username
+      * OAuth Password - https://twitchapps.com/tmi
+
+Set the correct env variables
+
+  * SPOTIFY_CLIENT_ID
+  * SPOTIFY_CLIENT_SECRET
+  * SPOTIFY_REFRESH_TOKEN
+  * TWITCH_USER
+  * TWITCH_PASS
+
+Build the release
+
+```bash
+MIX_ENV=prod mix release
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/sup_twitch](https://hexdocs.pm/sup_twitch).
+Run the Release
 
+```bash
+./_build/prod/rel/ahappybot/bin/ahappybot
+```
+
+## Deploying
+TODO
