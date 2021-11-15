@@ -8,3 +8,5 @@ config :a_happy_bot,
   twitch_pass: System.get_env("TWITCH_PASS"),
   twitch_chats: ["a_happy_death"],
   capabilities: ['membership']
+
+import_config "#{config_env()}.exs"
