@@ -1,0 +1,35 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+name: ahappybot
+region: nyc
+workers:
+- envs:
+  - key: SPOTIFY_CLIENT_ID
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: __SPOTIFY_CLIENT_ID__
+  - key: SPOTIFY_CLIENT_SECRET
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: __SPOTIFY_CLIENT_SECRET__
+  - key: SPOTIFY_REFRESH_TOKEN
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: __SPOTIFY_REFRESH_TOKEN__
+  - key: TWITCH_PASS
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: __TWITCH_PASS__
+  - key: TWITCH_USER
+    scope: RUN_AND_BUILD_TIME
+    value: a_happybot
+  image:
+    registry: silbermm
+    registry_type: DOCKER_HUB
+    repository: ahappybot
+    tag: __APP_VERSION__
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: ahappybot
+  source_dir: /

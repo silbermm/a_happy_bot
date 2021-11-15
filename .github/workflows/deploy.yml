@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  release:
+    types: [published]
+jobs:
+  build_and_deploy_image:
+
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get Version
+      id: get_version
+      run: echo ::set-output name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build Docker Image
+      run: make build
+    - name: Push to Docker Hub
+      run: make push
+    - name: Write Digital Ocean App Spec
+      uses: falnyr/replace-env-vars-action@master
+      env:
+        APP_VERSION: ${{ steps.get_version.outputs.RELEASE_VERSION }}
+        SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
+        TWITCH_USER: ${{ secrets.TWITCH_USER }}
+        TWITCH_PASS: ${{ secrets.TWITCH_PASS }}
+      with:
+        filename: spec.yaml
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: Update App
+      run: doctl apps update 66e0ca84-a603-49c1-ad04-d1965ba34b53 --spec spec.yaml
