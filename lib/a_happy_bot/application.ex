@@ -6,17 +6,17 @@ defmodule AHappyBot.Application do
   @impl true
   def start(_type, _args) do
     spotify_config = [
-      client_id: Application.fetch_env!(:a_happy_bot, :spotify_client_id),
-      client_secret: Application.fetch_env!(:a_happy_bot, :spotify_client_secret),
-      refresh_token: Application.fetch_env!(:a_happy_bot, :spotify_refresh_token)
+      client_id: Application.get_env(:a_happy_bot, :spotify_client_id),
+      client_secret: Application.get_env(:a_happy_bot, :spotify_client_secret),
+      refresh_token: Application.get_env(:a_happy_bot, :spotify_refresh_token)
     ]
 
     config = [
-      user: Application.fetch_env!(:a_happy_bot, :twitch_user),
-      pass: Application.fetch_env!(:a_happy_bot, :twitch_pass),
-      chats: Application.fetch_env!(:a_happy_bot, :twitch_chats),
+      user: Application.get_env(:a_happy_bot, :twitch_user),
+      pass: Application.get_env(:a_happy_bot, :twitch_pass),
+      chats: Application.get_env(:a_happy_bot, :twitch_chats),
       handler: AHappyBot.ChatHandler,
-      capabilities: Application.fetch_env!(:a_happy_bot, :capabilities)
+      capabilities: Application.get_env(:a_happy_bot, :capabilities)
     ]
 
     children = [

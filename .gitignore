@@ -24,3 +24,5 @@ sup_twitch-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+/.env
