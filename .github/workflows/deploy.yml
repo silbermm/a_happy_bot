@@ -39,4 +39,4 @@ jobs:
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     - name: Update App
-      run: doctl apps update 66e0ca84-a603-49c1-ad04-d1965ba34b53 --spec spec.yaml
+      run: doctl apps update c87b9bde-ea85-46dc-aa79-e0b58adb870b --spec spec.yaml
