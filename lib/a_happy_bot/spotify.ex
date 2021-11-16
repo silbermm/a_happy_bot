@@ -71,7 +71,7 @@ defmodule AHappyBot.Spotify do
     Process.send_after(self(), :refresh, 3_600_000)
     {:noreply, state}
   catch
-    e -> {:error, 401}
+    _e -> {:error, 401}
   end
 
   defp build_url(uri) do
