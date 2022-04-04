@@ -29,6 +29,7 @@ defmodule AHappyBot.MixProject do
     [
       {:tmi, "~> 0.3.0"},
       {:req, "~> 0.1.0"},
+      {:plug_cowboy, "~> 2.0"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false}
     ]
