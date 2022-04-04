@@ -20,11 +20,20 @@ defmodule AHappyBot.Application do
     ]
 
     children = [
-      {TMI.Supervisor, config},
-      {AHappyBot.Spotify, spotify_config}
+      AHappyBotWeb.Telemetry,
+      {Phoenix.PubSub, name: AHappyBot.PubSub},
+      AHappyBotWeb.Endpoint
+      # {TMI.Supervisor, config},
+      # {AHappyBot.Spotify, spotify_config}
     ]
 
     opts = [strategy: :one_for_one, name: AHappyBot.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  @impl true
+  def config_change(changed, _new, removed) do
+    AHappyBotWeb.Endpoint.config_change(changed, removed)
+    :ok
   end
 end
