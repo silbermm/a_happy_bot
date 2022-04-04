@@ -52,6 +52,7 @@ defmodule AHappyBot.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tmi, "~> 0.3.0"},
       {:req, "~> 0.1.0"},
+      {:dotenv, "~> 3.0.0", only: [:dev, :test]},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false}

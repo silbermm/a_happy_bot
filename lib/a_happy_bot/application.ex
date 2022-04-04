@@ -5,11 +5,16 @@ defmodule AHappyBot.Application do
 
   @impl true
   def start(_type, _args) do
-    spotify_config = [
-      client_id: Application.get_env(:a_happy_bot, :spotify_client_id),
-      client_secret: Application.get_env(:a_happy_bot, :spotify_client_secret),
-      refresh_token: Application.get_env(:a_happy_bot, :spotify_refresh_token)
-    ]
+    unless Mix.env() == :prod do
+      Dotenv.load()
+      Mix.Task.run("loadconfig")
+    end
+
+#     spotify_config = [
+#       client_id: Application.get_env(:a_happy_bot, :spotify_client_id),
+#       client_secret: Application.get_env(:a_happy_bot, :spotify_client_secret),
+#       refresh_token: Application.get_env(:a_happy_bot, :spotify_refresh_token)
+#     ]
 
     config = [
       user: Application.get_env(:a_happy_bot, :twitch_user),
@@ -22,8 +27,8 @@ defmodule AHappyBot.Application do
     children = [
       AHappyBotWeb.Telemetry,
       {Phoenix.PubSub, name: AHappyBot.PubSub},
-      AHappyBotWeb.Endpoint
-      # {TMI.Supervisor, config},
+      AHappyBotWeb.Endpoint,
+      {TMI.Supervisor, config}
       # {AHappyBot.Spotify, spotify_config}
     ]
 

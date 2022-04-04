@@ -6,6 +6,16 @@ import Config
 # and secrets from environment variables or elsewhere. Do not define
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
+if config_env() == :prod do
+  config :a_happy_bot,
+    spotify_client_id: System.fetch_env!("SPOTIFY_CLIENT_ID"),
+    spotify_client_secret: System.fetch_env!("SPOTIFY_CLIENT_SECRET"),
+    spotify_refresh_token: System.fetch_env!("SPOTIFY_REFRESH_TOKEN"),
+    twitch_user: System.fetch_env!("TWITCH_USER"),
+    twitch_pass: System.fetch_env!("TWITCH_PASS"),
+    twitch_chats: ["a_happy_death"],
+    capabilities: ['membership']
+end
 
 # Start the phoenix server if environment is set and running in a release
 if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
