@@ -5,7 +5,8 @@ defmodule AHappyBot.ChatHandler do
 
   @commands %{
     "song" => "shows the currently playing track",
-    "echo" => "repeats back what you say"
+    "echo" => "repeats back what you say",
+    "dance" => "dances for the requestor"
   }
 
   @impl true
