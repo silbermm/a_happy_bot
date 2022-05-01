@@ -24,12 +24,17 @@ defmodule AHappyBot.Application do
       capabilities: Application.get_env(:a_happy_bot, :capabilities)
     ]
 
+    discogs_config = [
+      token: Application.fetch_env!(:a_happy_bot, :discogs_token)
+    ]
+
     children = [
       AHappyBotWeb.Telemetry,
       {Phoenix.PubSub, name: AHappyBot.PubSub},
       AHappyBotWeb.Endpoint,
       {TMI.Supervisor, config},
-      {AHappyBot.Spotify, spotify_config}
+      {AHappyBot.Spotify, spotify_config},
+      {AHappyBot.Discogs, discogs_config}
     ]
 
     opts = [strategy: :one_for_one, name: AHappyBot.Supervisor]

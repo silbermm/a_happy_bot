@@ -16,7 +16,7 @@ config :a_happy_bot,
   twitch_pass: System.get_env("TWITCH_PASS"),
   twitch_chats: ["a_happy_death"],
   capabilities: ['membership'],
-  discogs_token: "eiijPNKvMKGhdXvNUYlLoQmJoAVGDkWEhEYUGjZs"
+  discogs_token: System.get_env("DISCOGS_TOKEN")
 
 # Configures the endpoint
 config :a_happy_bot, AHappyBotWeb.Endpoint,
