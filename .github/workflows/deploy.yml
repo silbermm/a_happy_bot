@@ -32,6 +32,7 @@ jobs:
         SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
         TWITCH_USER: ${{ secrets.TWITCH_USER }}
         TWITCH_PASS: ${{ secrets.TWITCH_PASS }}
+        DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
       with:
         filename: spec.yaml
     - name: Install doctl
