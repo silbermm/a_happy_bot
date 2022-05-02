@@ -6,6 +6,7 @@ defmodule AHappyBotWeb.StreamLive do
     if connected?(socket) do
       # subscribe to PUBSUB for new songs
     end
+
     {:ok, socket |> assign(:song, "something")}
   end
 
@@ -26,6 +27,6 @@ defmodule AHappyBotWeb.StreamLive do
   @impl true
   def handle_info(:new_song, socket) do
     Process.send_after(self(), :new_song, 2000)
-    {:noreply, socket |> assign(:song, "something else #{:rand.uniform}")}
+    {:noreply, socket |> assign(:song, "something else #{:rand.uniform()}")}
   end
 end

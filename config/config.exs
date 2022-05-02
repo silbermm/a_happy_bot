@@ -7,7 +7,6 @@
 # General application configuration
 import Config
 
-
 config :a_happy_bot,
   spotify_client_id: System.get_env("SPOTIFY_CLIENT_ID"),
   spotify_client_secret: System.get_env("SPOTIFY_CLIENT_SECRET"),
@@ -43,7 +42,7 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :tailwind, 
+config :tailwind,
   version: "3.0.12",
   default: [
     args: ~w(

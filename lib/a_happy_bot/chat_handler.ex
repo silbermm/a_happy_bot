@@ -74,6 +74,7 @@ defmodule AHappyBot.ChatHandler do
         TMI.message(chat, msg)
         total_num + 1
       end)
+
     if total < 1 do
       TMI.message(chat, "Nothing found for \"#{name}\"")
     end
