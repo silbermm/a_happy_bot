@@ -23,21 +23,21 @@ jobs:
       run: make build
     - name: Push to Docker Hub
       run: make push
-    - name: Write Digital Ocean App Spec
-      uses: falnyr/replace-env-vars-action@master
-      env:
-        APP_VERSION: ${{ steps.get_version.outputs.RELEASE_VERSION }}
-        SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-        SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
-        TWITCH_USER: ${{ secrets.TWITCH_USER }}
-        TWITCH_PASS: ${{ secrets.TWITCH_PASS }}
-        DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
-      with:
-        filename: spec.yaml
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-    - name: Update App
-      run: doctl apps update {{ secrets.DIGITALOCEAN_APP_ID }} --spec spec.yaml
+    # - name: Write Digital Ocean App Spec
+      # uses: falnyr/replace-env-vars-action@master
+      # env:
+      #   APP_VERSION: ${{ steps.get_version.outputs.RELEASE_VERSION }}
+      #   SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      #   SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      #   SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
+      #   TWITCH_USER: ${{ secrets.TWITCH_USER }}
+      #   TWITCH_PASS: ${{ secrets.TWITCH_PASS }}
+      #   DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+      # with:
+      #   filename: spec.yaml
+    # - name: Install doctl
+      # uses: digitalocean/action-doctl@v2
+      # with:
+      #   token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    # - name: Update App
+      # run: doctl apps update {{ secrets.DIGITALOCEAN_APP_ID }} --spec spec.yaml

@@ -5,7 +5,7 @@ defmodule AHappyBot.Application do
 
   @impl true
   def start(_type, _args) do
-    unless Mix.env() == :prod do
+    if function_exported?(Mix, :env, 0) && Mix.env() != :prod do
       Dotenv.load()
       Mix.Task.run("loadconfig")
     end

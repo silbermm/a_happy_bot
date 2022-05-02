@@ -4,7 +4,7 @@ defmodule AHappyBot.MixProject do
   def project do
     [
       app: :a_happy_bot,
-      version: "0.1.5",
+      version: "0.1.6",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers(),
