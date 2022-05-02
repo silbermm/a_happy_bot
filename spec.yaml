@@ -1,9 +1,17 @@
-alerts:
-- rule: DEPLOYMENT_FAILED
-- rule: DOMAIN_FAILED
 name: ahappybot
 region: nyc
-workers:
+services:
+- http_port: 4000
+  image:
+    registry: silbermm
+    registry_type: DOCKER_HUB
+    repository: ahappybot
+    tag: __APP_VERISON__
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: ahappybot
+  routes:
+  - path: /
 - envs:
   - key: SPOTIFY_CLIENT_ID
     scope: RUN_AND_BUILD_TIME
@@ -28,12 +36,3 @@ workers:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: __DISCOGS_TOKEN__
-  image:
-    registry: silbermm
-    registry_type: DOCKER_HUB
-    repository: ahappybot
-    tag: __APP_VERSION__
-  instance_count: 1
-  instance_size_slug: basic-xxs
-  name: ahappybot
-  source_dir: /
