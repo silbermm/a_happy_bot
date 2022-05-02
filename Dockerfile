@@ -21,10 +21,18 @@ RUN mkdir config
 COPY config/config.exs config/prod.exs config/
 RUN mix deps.compile
 
+COPY priv priv
+
 COPY lib lib
 COPY config/runtime.exs config/
 
+COPY assets assets
+
+# compile assets
+RUN mix assets.deploy
+
 COPY rel rel
+
 RUN mix release
 
 FROM alpine:3.12.1 AS app
@@ -49,11 +57,11 @@ RUN \
     && su "${USER}"
 
 # Everything from this line onwards will run in the context of the unprivileged user.
+
 USER "${USER}"
 COPY --from=build --chown="${USER}":"${USER}" /app/_build/"${MIX_ENV}"/rel/ahappybot ./
 
 ENTRYPOINT ["bin/ahappybot"]
-
 
 # Usage:
 #  * build: sudo docker image build -t silbermm/ahappybot .
