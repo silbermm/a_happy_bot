@@ -24,6 +24,10 @@ workers:
   - key: TWITCH_USER
     scope: RUN_AND_BUILD_TIME
     value: a_happybot
+  - key: DISCOGS_TOKEN
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: __DISCOGS_TOKEN__
   image:
     registry: silbermm
     registry_type: DOCKER_HUB

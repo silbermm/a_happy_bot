@@ -14,7 +14,8 @@ if config_env() == :prod do
     twitch_user: System.fetch_env!("TWITCH_USER"),
     twitch_pass: System.fetch_env!("TWITCH_PASS"),
     twitch_chats: ["a_happy_death"],
-    capabilities: ['membership']
+    capabilities: ['membership'],
+    discogs_token: System.fetch_env!("DISCOGS_TOKEN")
 end
 
 # Start the phoenix server if environment is set and running in a release
