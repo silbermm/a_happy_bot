@@ -25,7 +25,7 @@ defmodule AHappyBot.Application do
     ]
 
     discogs_config = [
-      token: Application.fetch_env!(:a_happy_bot, :discogs_token)
+      token: Application.get_env(:a_happy_bot, :discogs_token, "")
     ]
 
     children = [
