@@ -12,7 +12,7 @@ defmodule AHappyBot.MixProject do
       aliases: aliases(),
       deps: deps(),
       releases: [
-        ahappybot: [
+        a_happy_bot: [
           include_executables_for: [:unix],
           applications: [runtime_tools: :permanent]
         ]

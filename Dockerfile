@@ -1,6 +1,25 @@
-ARG MIX_ENV="prod"
+# Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian instead of
+# Alpine to avoid DNS resolution issues in production.
+#
+# https://hub.docker.com/r/hexpm/elixir/tags?page=1&name=ubuntu
+# https://hub.docker.com/_/ubuntu?tab=tags
+#
+#
+# This file is based on these images:
+#
+#   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
+#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20210902-slim - for the release image
+#   - https://pkgs.org/ - resource for finding needed packages
+#   - Ex: hexpm/elixir:1.13.1-erlang-24.2.1-debian-bullseye-20210902-slim
+#
+ARG BUILDER_IMAGE="hexpm/elixir:1.13.1-erlang-24.2.1-debian-bullseye-20210902-slim"
+ARG RUNNER_IMAGE="debian:bullseye-20210902-slim"
 
-FROM hexpm/elixir:1.12.1-erlang-24.1.5-alpine-3.14.2 as build
+FROM ${BUILDER_IMAGE} as builder
+
+# install build dependencies
+RUN apt-get update -y && apt-get install -y build-essential git \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # prepare build dir
 WORKDIR /app
@@ -10,63 +29,65 @@ RUN mix local.hex --force && \
     mix local.rebar --force
 
 # set build ENV
-ARG MIX_ENV
-ENV MIX_ENV="${MIX_ENV}"
+ENV MIX_ENV="prod"
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
 
-COPY config/config.exs config/prod.exs config/
+# copy compile-time config files before we compile dependencies
+# to ensure any relevant config change will trigger the dependencies
+# to be re-compiled.
+COPY config/config.exs config/${MIX_ENV}.exs config/
 RUN mix deps.compile
 
 COPY priv priv
 
-COPY lib lib
-COPY config/runtime.exs config/
-
+# note: if your project uses a tool like https://purgecss.com/,
+# which customizes asset compilation based on what it finds in
+# your Elixir templates, you will need to move the asset compilation
+# step down so that `lib` is available.
 COPY assets assets
 
 # compile assets
 RUN mix assets.deploy
 
-COPY rel rel
+# Compile the release
+COPY lib lib
 
+RUN mix compile
+
+# Changes to config/runtime.exs don't require recompiling the code
+COPY config/runtime.exs config/
+
+COPY rel rel
 RUN mix release
 
-FROM alpine:3.12.1 AS app
-RUN apk add --no-cache libstdc++ openssl ncurses-libs
+# start a new build stage so that the final image will only contain
+# the compiled release and other runtime necessities
+FROM ${RUNNER_IMAGE}
 
-ARG MIX_ENV
-ENV USER="elixir"
+RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
+  && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
-WORKDIR "/home/${USER}/app"
+# Set the locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-# Creates an unprivileged user to be used exclusively to run the Elixir app
-RUN \
-  addgroup \
-    -g 1000 \
-    -S "${USER}" \
-    && adduser \
-    -s /bin/sh \
-    -u 1000 \
-    -G "${USER}" \
-    -h "/home/${USER}" \
-    -D "${USER}" \
-    && su "${USER}"
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
-# Everything from this line onwards will run in the context of the unprivileged user.
+WORKDIR "/app"
+RUN chown nobody /app
 
-USER "${USER}"
-COPY --from=build --chown="${USER}":"${USER}" /app/_build/"${MIX_ENV}"/rel/ahappybot ./
+# Only copy the final release from the build stage
+COPY --from=builder --chown=nobody:root /app/_build/prod/rel/a_happy_bot ./
 
-ENTRYPOINT ["bin/ahappybot"]
+USER nobody
 
-# Usage:
-#  * build: sudo docker image build -t silbermm/ahappybot .
-#  * shell: sudo docker container run --rm -it --entrypoint "" silbermm/ahappybot sh
-#  * run:   sudo docker container run --rm -it --name ahappybot silbermm/ahappybot
-#  * exec:  sudo docker container exec -it ahappybot sh
-#  * logs:  sudo docker container logs --follow --tail 100 ahappybot
-CMD ["start"]
+CMD ["/app/bin/server"]
+
+# Appended by flyctl
+ENV ECTO_IPV6 true
+ENV ERL_AFLAGS "-proto_dist inet6_tcp"
