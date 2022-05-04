@@ -18,11 +18,6 @@ defmodule AHappyBotWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    live "/stream", StreamLive, :index
+    live "/live", StreamLive, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", AHappyBotWeb do
-  #   pipe_through :api
-  # end
 end

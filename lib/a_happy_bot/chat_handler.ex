@@ -3,6 +3,9 @@ defmodule AHappyBot.ChatHandler do
 
   use TMI.Handler
 
+  alias AHappyBot.PubSub
+  alias AHappyBot.PubSubChannels
+
   @commands %{
     "song" => "shows the currently playing track",
     "echo" => "repeats back what you say",
@@ -28,7 +31,8 @@ defmodule AHappyBot.ChatHandler do
   end
 
   def handle_message(message, sender, chat) do
-    Logger.debug("Message in #{chat} from #{sender}: #{message}")
+    # Logger.debug("Message in #{chat} from #{sender}: #{message}")
+    :ok
   end
 
   defp show_help(chat, "all") do
@@ -59,11 +63,9 @@ defmodule AHappyBot.ChatHandler do
   end
 
   defp list_albums(chat) do
-    AHappyBot.Discogs.list_collection()
-    |> Enum.each(fn record ->
-      msg = "<<\"#{record.album}\" by \"#{Enum.join(record.artists, ", ")}\">>"
-      TMI.message(chat, msg)
-    end)
+    albums = AHappyBot.Discogs.list_collection()
+    Phoenix.PubSub.broadcast!(PubSub, PubSubChannels.albums_topic(), {:albums, albums})
+    TMI.message(chat, "Try searching for a particular album using\n!album search")
   end
 
   defp list_albums_by_name(chat, name) do
